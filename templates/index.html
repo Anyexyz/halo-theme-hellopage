@@ -1,18 +1,341 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="https://www.thymeleaf.org"
-  th:replace="~{layout :: html(head = null,content = ~{::content})}"
->
-  <th:block th:fragment="content">
-    <ul>
-      <li th:each="post : ${posts.items}">
-        <a
-          th:href="@{${post.status.permalink}}"
-          th:text="${post.spec.title}"
-        ></a>
-      </li>
-    </ul>
-    <a th:if="${posts.hasPrevious()}" th:href="@{${posts.prevUrl}}">上一页</a>
-    <a th:if="${posts.hasNext()}" th:href="@{${posts.nextUrl}}">下一页</a>
-  </th:block>
+<html lang="zh-CN" xmlns:th="https://www.thymeleaf.org" th:fragment="html (head,content)">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${site.title}"></title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" type="application/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" type="text/css"
+        rel="stylesheet">
+    <script src="https://at.alicdn.com/t/font_1230786_ewprpwrczvj.js"></script>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css?v={version}(version=${theme.spec.version})}" />
+    <script th:src="@{/assets/js/sou.js?v={version}(version=${theme.spec.version})}"></script>
+    <script th:src="${theme.config.style.iconfont_url}"></script>
+    <th:block th:if="${head != null}">
+        <th:block th:replace="${head}" />
+    </th:block>
+</head>
+
+<body>
+    <div class="banner">
+        <img th:src=${theme.config.style.cover_img} />
+        <div class="bottom-cover"
+            style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);">
+        </div>
+    </div>
+
+    <!--topbar开始-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
+        <a class="navbar-brand" href="/"><img th:src=${site.logo} height="35" style=" margin-left: 20px;" alt="" /></a>
+        <button class="navbar-toggler collapsed" style="border: none; outline: none;" type="button"
+            data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6029"
+                width="200" height="200">
+                <path
+                    d="M901.632 896H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808zM901.632 568.32H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808zM901.632 240.64H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808z"
+                    p-id="3802" fill="#ffffff"></path>
+            </svg>
+        </button>
+        <div class="type-right"></div>
+        <div class="collapse navbar-collapse" id="navbarsExample05">
+            <ul class="navbar-nav mr-auto">
+                <ul th:with="nav_links = ${theme.config.nav_info.nav_links}" class="navbar-nav mr-auto">
+                    <th:block th:each="nav_links : ${nav_links}">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="${nav_links.url}" th:text="${nav_links.name}"></a>
+                        </li>
+                </ul>
+            </ul>
+            <div id="main">
+                <div id="show_date">
+                    <script>
+                        setInterval(function () {
+                            var currentTime = new Date().toLocaleDateString(
+                                "zh-CN",
+                                {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    weekday: "long"
+                                },
+                            );
+                            const showDateElement =
+                                document.getElementById("show_date");
+                            if (showDateElement) {
+                                showDateElement.textContent = currentTime;
+                            }
+                        }, 0);
+                    </script>
+                </div>
+                <div id="show_time">
+                    <script>
+                        setInterval(function () {
+                            var currentTime = new Date().toLocaleTimeString(
+                                "zh-CN",
+                                {
+                                    hour12: false,
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                },
+                            );
+                            const showTimeElement =
+                                document.getElementById("show_time");
+                            if (showTimeElement) {
+                                showTimeElement.textContent = currentTime;
+                            }
+                        }, 0);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!--topbar结束-->
+
+    <div class="container" style="margin-top:10vh; position: relative; z-index: 100;">
+        <h2 class="title" th:text="${theme.config.style.h2_title}"></h2>
+        <p class="content" th:text="${theme.config.style.yiyan}"></p>
+
+        <!--搜索开始-->
+        <div id="search" class="s-search">
+            <div id="search-list" class="hide-type-list">
+                <div class="search-group group-a s-current" style=" margin-top: 50px;">
+                    <ul th:with="search_links = ${theme.config.search.search_links}" class="search-type">
+                        <th:block th:each="search_links : ${search_links}">
+                            <li>
+                                <input hidden="" checked="" type="radio" name="type"
+                                    th:id="'type-' + ${search_links.id}" th:value="${search_links.url}"
+                                    th:data-placeholder="${search_links.placeholder}" />
+                                <label th:for="'type-' + ${search_links.id}" style="font-weight:600">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use th:xlink:href="${search_links.icon}"></use>
+                                    </svg>
+                                    <span th:style="'color:'+ ${search_links.color}" th:text="${search_links.name}">
+                                    </span>
+                                </label>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+            <form action="https://www.bing.com/search?q=" method="get" target="_blank" id="super-search-fm">
+                <input type="text" id="search-text" placeholder="搜索一下" style="outline:0" autocomplete="off" />
+                <button class="submit" type="submit">
+                    <svg style="width: 22px; height: 22px; margin: 0 20px 0 20px; color: #fff;" class="icon"
+                        aria-hidden="true" viewBox="0 0 1024 1024">
+                        <path
+                            d="M950.820202 899.620202l-168.210101-168.080808c64.646465-74.731313 100.072727-169.115152 100.072727-268.8 0-109.89899-42.79596-213.20404-120.50101-290.779798S581.171717 51.329293 471.40202 51.329293c-109.89899 0-213.20404 42.79596-290.779798 120.50101-77.705051 77.705051-120.50101 181.010101-120.50101 290.779798 0 109.89899 42.79596 213.20404 120.50101 290.779798 77.705051 77.705051 181.010101 120.50101 290.779798 120.50101 90.763636 0 177.00202-29.220202 248.113132-83.135353l170.149494 170.149495c8.40404 8.40404 19.523232 12.670707 30.642425 12.670707s22.109091-4.266667 30.642424-12.670707c16.808081-16.937374 16.808081-44.347475-0.129293-61.284849z m-804.20202-437.010101c0-179.070707 145.713131-324.654545 324.654545-324.654545 179.070707 0 324.654545 145.713131 324.654546 324.654545 0.129293 179.070707-145.454545 324.783838-324.525253 324.783838S146.618182 641.680808 146.618182 462.610101z m0 0"
+                            fill=""></path>
+                    </svg>
+                </button>
+                <span> </span>
+
+                <ul id="word" style="display: none;"></ul>
+            </form>
+            <div class="set-check hidden-xs">
+                <input type="checkbox" id="set-search-blank" class="bubble-3" autocomplete="off" />
+            </div>
+        </div>
+        <!--搜索结束-->
+
+
+
+        <th:block th:each="group : ${linkFinder.groupBy()}"
+            th:if="${#annotations.getOrDefault(group, 'show_on_hellopage', 'true') == 'true'}">
+
+            <ul class="mylist row" th:if="${#lists.size(group.links) > 0}">
+                <li class="title" th:if="${group.spec.displayName != ''}">
+                    <svg class="icon" aria-hidden="true">
+                        <use th:xlink:href="${#annotations.getOrDefault(group, 'icon', '')}"></use>
+                    </svg>
+                    <span th:text="${group.spec.displayName}"></span>
+                </li>
+                <li class="col-3 col-sm-3 col-md-3 col-lg-1" th:each="link : ${group.links}" :key="i">
+                    <a rel="nofollow"
+                        th:href="${#annotations.contains(link, 'to_post') ? postFinder.getByName(#annotations.get(link, 'to_post')).status.permalink : link.spec.url}"
+                        th:target="${#annotations.contains(link, 'to_post') ? '' : '_blank'}">
+                        <svg class="icon" aria-hidden="true">
+                            <use th:xlink:href="${#annotations.getOrDefault(link, 'icon', '')}"></use>
+                        </svg>
+                        <span th:text="${link.spec.displayName}"></span>
+                    </a>
+                </li>
+            </ul>
+        </th:block>
+
+    </div>
+    <div class="mt-5 mb-3 footer text-muted text-center">
+        <!--备案信息-->
+        <a class="beian" th:if="${theme.config.beian.index_icp2 != null}"
+            th:href="'https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=' + ${theme.config.beian.index_icp2}"
+            target="_blank" rel="nofollow noopener">
+            <img th:src="@{/assets/img/icp.png?v={version}(version=${theme.spec.version})}" alt="公安网备" width="16"
+                height="16">
+            <span th:text="${theme.config.beian.index_icp2}"></span>
+        </a>
+        <a class="beian" th:if="${theme.config.beian.index_icp != null}" th:href="'http://beian.miit.gov.cn/'"
+            target="_blank" rel="nofollow noopener" th:text="${theme.config.beian.index_icp}"></a>
+        <!--版权信息-->
+        <p> Copyright ©2024 <a th:href="${site.url}" th:text="${site.title}"></a>. All Rights Reserved.</p>
+        <halo:footer />
+    </div>
+    <script>
+        (function () {
+            // DOM元素引用
+            var searchBlankCheckbox = document.querySelector("#set-search-blank"),
+                searchGroups = document.querySelectorAll(".search-group"),
+                selectedRadio = null;
+
+            var searchForm = document.querySelector("#super-search-fm"),
+                searchInput = document.querySelector("#search-text"),
+                searchTypeRadios = document.querySelectorAll('input[name="type"]');
+
+            // 初始化函数
+            function initialize() {
+                updateCheckbox();
+                updateRadio();
+                updatePlaceholder();
+                updateAction();
+            }
+
+            // 更新复选框状态
+            function updateCheckbox() {
+                searchBlankCheckbox.checked = isNewWindow();
+            }
+
+            // 更新单选按钮状态
+            function updateRadio() {
+                selectedRadio = document.querySelector(
+                    'input[name="type"][value="' + getCurrentType() + '"]'
+                );
+                if (selectedRadio) {
+                    selectedRadio.checked = true;
+                    highlightCurrentGroup(selectedRadio);
+                }
+            }
+
+            // 更新搜索框占位符
+            function updatePlaceholder() {
+                setSearchPlaceholder(getPlaceholderText());
+            }
+
+            // 更新表单提交地址
+            function updateAction() {
+                setFormAction(getActionURL());
+            }
+
+            // 高亮当前选中的单选按钮所在的组
+            function highlightCurrentGroup(selectedRadio) {
+                for (var i = 0; i < searchGroups.length; i++) {
+                    searchGroups[i].classList.remove("s-current");
+                }
+                selectedRadio.parentNode.parentNode.parentNode.classList.add(
+                    "s-current"
+                );
+            }
+
+            // 保存到本地存储
+            function saveToLocalStorage(key, value) {
+                window.localStorage.setItem("superSearch" + key, value);
+            }
+
+            // 从本地存储获取数据
+            function getFromLocalStorage(key) {
+                return window.localStorage.getItem("superSearch" + key);
+            }
+
+            // 处理单选按钮改变事件
+            function handleRadioChange(event) {
+                var target = event.target;
+                updatePlaceholder();
+                setFormAction(getActionURL());
+                saveToLocalStorage("type", target.value);
+                searchInput.focus();
+                highlightCurrentGroup(target);
+            }
+
+            // 获取当前选中的单选按钮的值
+            function getCurrentType() {
+                var typeFromStorage = getFromLocalStorage("type");
+                return typeFromStorage || searchTypeRadios[0].value;
+            }
+
+            // 处理复选框改变事件
+            function handleCheckboxChange(event) {
+                saveToLocalStorage(
+                    "newWindow",
+                    event.target.checked ? 1 : -1
+                );
+                updateNewWindow(event.target.checked);
+            }
+
+            // 更新是否在新窗口中打开搜索结果
+            function updateNewWindow(isChecked) {
+                isChecked
+                    ? (searchForm.target = "_blank")
+                    : searchForm.removeAttribute("target");
+            }
+
+            // 处理表单提交事件
+            function handleSubmit(event) {
+                event.preventDefault();
+                if (searchInput.value === "") {
+                    searchInput.focus();
+                    return false;
+                } else {
+                    setFormAction(getActionURL() + searchInput.value);
+                    updateNewWindow(isNewWindow());
+                    isNewWindow()
+                        ? window.open(searchForm.action, +new Date())
+                        : (location.href = searchForm.action);
+                }
+            }
+
+            // 获取是否在新窗口中打开搜索结果
+            function isNewWindow() {
+                var newWindowSetting = getFromLocalStorage("newWindow");
+                return newWindowSetting ? newWindowSetting == 1 : true;
+            }
+
+            // 获取当前选中的单选按钮的占位符文本
+            function getPlaceholderText() {
+                return getCurrentTypeRadio().getAttribute("data-placeholder");
+            }
+
+            // 获取当前选中的单选按钮的元素
+            function getCurrentTypeRadio() {
+                return document.querySelector('input[name="type"]:checked');
+            }
+
+            // 获取表单提交地址
+            function getActionURL() {
+                return getCurrentTypeRadio().value;
+            }
+
+            // 设置搜索框占位符文本
+            function setSearchPlaceholder(text) {
+                searchInput.setAttribute("placeholder", text);
+            }
+
+            // 设置表单提交地址
+            function setFormAction(url) {
+                searchForm.action = url;
+            }
+
+            // 初始化
+            initialize();
+
+            // 事件监听
+            for (var i = 0; i < searchTypeRadios.length; i++) {
+                searchTypeRadios[i].addEventListener("change", handleRadioChange);
+            }
+            searchBlankCheckbox.addEventListener("change", handleCheckboxChange);
+            searchForm.addEventListener("submit", handleSubmit);
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>

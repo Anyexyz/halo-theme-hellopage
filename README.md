@@ -1,5 +1,39 @@
-# Theme Starter
+# Theme HelloPage
 
-Halo 2.0 的基础主题开发模板，包含了主题的基本目录结构。
+HelloPage 是一款简洁的导航页主题，适用于 Halo 系统，可用于快捷搭建一个导航站。
 
-主题开发文档可查阅：<https://docs.halo.run/2.0.0-SNAPSHOT/developer-guide/theme/prepare>
+![效果图](img/1716922588945.png)
+
+<div align="center">
+
+移植于 [5IUX搜索 - 导航版](https://sou.5iux.cn/)
+
+</div>
+
+## 预览
+
+[预览地址](https://www.anye.xyz/hello)
+
+## 特性
+
+此主题需要安装 Halo 的官方插件 **[链接管理](https://www.halo.run/store/apps/app-hfbQg)** 然后进行操作。
+
+### 自定义分组图标、控制分组显示、链接关联文章：
+
+![](img/1716923218830.png)
+
+![](img/1716923270559.png)
+
+## 致谢
+
+- [Halo](https://halo.run/)
+- [5IUX搜索 - 导航版](https://sou.5iux.cn/)
+- [六零导航页](https://hao.lylme.com/)
+- [Ryan Wang](https://ryanc.cc/)
+- [张洪Hao](https://github.com/zhheo)
+- [困困鱼](https://github.com/chengzhongxue)
+
+## 欢迎关注
+
+- [个人博客](https://www.anye.xyz/)
+- [水滴基地](https://www.sdbase.cn/)

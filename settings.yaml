@@ -1,13 +1,197 @@
 apiVersion: v1alpha1
 kind: Setting
 metadata:
-  name: theme-starter-setting
+  name: theme-hellopage-setting
+#  annotations:
+#    "store.halo.run/app-id": ""
 spec:
   forms:
+    - group: nav_info
+      label: 导航信息
+      formSchema:
+        - $formkit: repeater
+          name: nav_links
+          label: 导航链接
+          value:
+            - name: "首页"
+              url: "/"
+          children:
+            - $formkit: text
+              name: name
+              label: 名称
+            - $formkit: text
+              name: url
+              label: 链接
     - group: style
       label: 样式
       formSchema:
-        - $formkit: color
-          name: background_color
-          label: 背景颜色
-          value: "#f2f2f2"
+        - $formkit: text
+          name: iconfont_url
+          value: "//at.alicdn.com/t/c/font_4562126_9fo6pp7psxq.js"
+          label: Iconfont链接
+        - $formkit: attachment
+          name: cover_img
+          value: https://bing.ee123.net/img/
+          label: 首页背景图片
+        - $formkit: text
+          name: h2_title
+          value: 上网，从这里开始！
+          label: 首页标题
+        - $formkit: text
+          name: yiyan
+          value: 能说不能行，不是真智慧
+          label: 首页一言
+    - group: search
+      label: 搜索引擎
+      formSchema:
+        - $formkit: repeater
+          name: search_links
+          label: 搜索引擎链接
+          value:
+          - id: "metaso"
+            name: "秘塔AI搜索"
+            placeholder: "没有广告，直达结果"
+            color: "#0084fe"
+            icon: "#metaso-01"
+            url: "https://metaso.cn/?q="
+          - id: "baidu"
+            name: "百度一下"
+            placeholder: "百度一下，你就知道"
+            color: "#0c498c"
+            icon: "#baidu"
+            url: "https://www.baidu.com/s?word="
+          - id: "wuzhui"
+            name: "无追搜索"
+            placeholder: "隐私保护，化繁为简"
+            color: "#19DBF7"
+            icon: "#wuzhui"
+            url: "https://www.wuzhuiso.com/s?q="
+          - id: "bing"
+            name: "Bing必应"
+            placeholder: "微软必应搜索"
+            color: "#696a6d"
+            icon: "#Bing"
+            url: "https://cn.bing.com/search?q="
+          - id: "DuckDuckGo"
+            name: "DuckDuckGo"
+            placeholder: "开启不受网络跟踪的搜索之旅"
+            color: "#DE5833"
+            icon: "#duckduckgo"
+            url: "https://duckduckgo.com/?q="
+          - id: "github"
+            name: "Github"
+            placeholder: "请输入搜索的项目"
+            color: "#000000"
+            icon: "#github"
+            url: "https://github.com/search?q="
+          - id: "google"
+            name: "谷歌搜索"
+            placeholder: "值得信任的搜索引擎"
+            color: "#3B83FA"
+            icon: "#guge"
+            url: "https://www.google.com/search?hl=zh-CN&q="
+          - id: "Linux 命令"
+            name: "Linux 命令"
+            placeholder: "Linux 命令搜索"
+            color: "#696a6d"
+            icon: "#linux"
+            url: "https://linux.lylme.com/list.html#!kw="
+          - id: "fanyi"
+            name: "百度翻译"
+            placeholder: "输入翻译内容（自动检测语言）"
+            color: "#0084fe"
+            icon: "#baidufanyi"
+            url: "https://fanyi.baidu.com/#auto/zh/"
+          - id: "google-translate"
+            name: "Google翻译"
+            placeholder: "输入翻译内容 (自动检测语言)"
+            color: "#696a6d"
+            icon: "#guge"
+            url: "https://translate.google.com/?sl=auto&tl=zh-CN&text="
+          - id: "iconfont"
+            name: "iconfont"
+            placeholder: "搜索图标"
+            color: "#696a6d"
+            icon: "#Iconfont"
+            url: "https://www.iconfont.cn/search/index?searchType=icon&q="
+          - id: "Crxsousou"
+            name: "Crx搜搜"
+            placeholder: "输入你想搜索的chrome浏览器插件"
+            color: "#696a6d"
+            icon: "#chajian1"
+            url: "https://www.crxsoso.com/search?store=chrome&keyword="
+          children:
+            - $formkit: text
+              name: name
+              label: 名称
+            - $formkit: text
+              name: url
+              label: 链接
+            - $formkit: text
+              name: id
+              label: ID
+            - $formkit: text
+              name: icon
+              label: 图标
+            - $formkit: text
+              name: placeholder
+              label: 提示文字
+    - group: beian
+      label: 备案信息
+      formSchema:
+        - $formkit: text
+          name: index_icp
+          label: 备案号
+          help: 在中国大陆可以访问的网站应填写备案号
+        - $formkit: text
+          name: index_icp2
+          label: 公安备案
+          help: 在中国大陆可以访问的网站应填写公安备案号
+
+---
+
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: link-group-setting-hellopage
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: LinkGroup
+  formSchema:
+    - $formkit: text
+      name: icon
+      label: 图标
+      value: ''
+      help: "图标库:iconfont, 使用前需要先在主题设置中填写iconfont的js链接, 图标需要带'#'号"
+    - $formkit: radio
+      name: show_on_hellopage
+      label: 显示在HelloPage中
+      help: 控制此分组是否显示在HelloPage中
+      value: "true"
+      options: 
+        - label: 显示
+          value: "true"
+        - label: 不显示
+          value: "false"
+
+---
+
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: link-item-setting-hellopage
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: Link
+  formSchema:
+    - $formkit: text
+      name: icon
+      label: 图标
+      value: ''
+      help: "图标库:iconfont, 使用前需要先在主题设置中填写iconfont的js链接, 图标需要带'#'号"
+    - $formkit: postSelect
+      name: to_post
+      label: 关联的文章
+      help: "当有关联的文章时，则跳转到对应文章，而不是直接访问地址"
