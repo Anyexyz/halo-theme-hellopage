@@ -32,7 +32,7 @@ HelloPage 是一款简洁的导航页主题，适用于 Halo 系统，可用于�
 - [5IUX搜索 - 导航版](https://sou.5iux.cn/)
 - [六零导航页](https://hao.lylme.com/)
 - [Ryan Wang](https://ryanc.cc/)
-- [张洪Hao](https://github.com/zhheo)
+- [张洪Heo](https://github.com/zhheo)
 - [困困鱼](https://github.com/chengzhongxue)
 
 ## 欢迎关注
