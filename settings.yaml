@@ -55,6 +55,15 @@ spec:
     - group: search
       label: 搜索引擎配置
       formSchema:
+        - $formkit: select
+          name: search_target
+          validation: required
+          label: 搜索引擎跳转方式
+          options:
+            - value: '_blank'
+              label: 新标签页
+            - value: '_self'
+              label: 当前窗口
         - $formkit: repeater
           name: search_links
           label: 搜索引擎链接
