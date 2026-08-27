@@ -311,6 +311,7 @@ li.selected {
     overflow: hidden;
     padding: 10px 0;
     border-radius: 10px;
+    position: relative;
 }
 
 .mylist li.col-3 img {
@@ -337,6 +338,36 @@ li.selected {
 
 .mylist li.col-3:hover {
     background: #eee;
+}
+
+/* Link Status Dot */
+.link-status-dot {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: .55;
+}
+
+.link-status-dot.online {
+    background: #7bc95b;
+}
+
+.link-status-dot.offline {
+    background: #d98a8f;
+}
+
+.mylist li.col-3:hover .link-status-dot {
+    opacity: .9;
+}
+
+.mylist li.link-offline img,
+.mylist li.link-offline svg {
+    filter: grayscale(1);
+    opacity: .65;
 }
 
 .mylist li.col-3 span {
@@ -833,5 +864,12 @@ li.selected {
 
     .mylist li.col-3 span {
         font-size: 12px;
+    }
+
+    .link-status-dot {
+        top: 6px;
+        right: 6px;
+        width: 6px;
+        height: 6px;
     }
 }

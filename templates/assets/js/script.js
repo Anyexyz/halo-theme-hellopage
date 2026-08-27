@@ -141,19 +141,9 @@ $(function () {
 // 搜索引擎切换功能
 (function () {
     function initializeSearch() {
-        loadStoredSettings();
         selectDefaultSearchEngine();
         updatePlaceholder();
         updateFormAction();
-    }
-
-    function loadStoredSettings() {
-        var storedNewWindow = window.localStorage.getItem("superSearchnewWindow");
-        if (storedNewWindow) {
-            var isChecked = storedNewWindow === "1";
-            setNewWindowCheckbox.checked = isChecked;
-            setFormTarget(isChecked);
-        }
     }
 
     function selectDefaultSearchEngine() {
@@ -196,12 +186,6 @@ $(function () {
         highlightSelectedSearchEngine(event.target);
     }
 
-    function handleNewWindowChange(event) {
-        var isChecked = event.target.checked;
-        window.localStorage.setItem("superSearchnewWindow", isChecked ? "1" : "-1");
-        setFormTarget(isChecked);
-    }
-
     function handleFormSubmit(event) {
         event.preventDefault();
         if (searchTextInput.value === "") {
@@ -210,27 +194,16 @@ $(function () {
         }
         var currentAction = document.querySelector('input[name="type"]:checked').value;
         searchForm.action = currentAction + searchTextInput.value;
-        var openInNewWindow = window.localStorage.getItem("superSearchnewWindow") === "1";
-        setFormTarget(openInNewWindow);
-        if (openInNewWindow) {
+        if (searchForm.target === '_blank') {
             window.open(searchForm.action, '_blank');
         } else {
             location.href = searchForm.action;
         }
     }
 
-    function setFormTarget(openInNewWindow) {
-        if (openInNewWindow) {
-            searchForm.target = "_blank";
-        } else {
-            searchForm.removeAttribute("target");
-        }
-    }
-
     var searchEngineInputs = document.querySelectorAll('input[name="type"]');
     var searchForm = document.querySelector("#super-search-fm");
     var searchTextInput = document.querySelector("#search-text");
-    var setNewWindowCheckbox = document.querySelector("#set-search-blank");
     var searchGroups = document.querySelectorAll(".search-group");
     var currentSearchEngine = searchEngineInputs[0];
 
@@ -238,10 +211,6 @@ $(function () {
 
     for (var i = 0; i < searchEngineInputs.length; i++) {
         searchEngineInputs[i].addEventListener("change", handleSearchEngineChange);
-    }
-
-    if (setNewWindowCheckbox) {
-        setNewWindowCheckbox.addEventListener("change", handleNewWindowChange);
     }
 
     if (searchForm) {

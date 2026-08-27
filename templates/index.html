@@ -45,7 +45,7 @@
                     </ul>
                 </div>
             </div>
-            <form action="https://www.bing.com/search?q=" method="get" target="_blank" id="super-search-fm">
+            <form action="https://www.bing.com/search?q=" method="get" th:target="${theme.config.search.search_target}" id="super-search-fm">
                 <input type="text" id="search-text" placeholder="搜索一下" style="outline:0"
                     autocomplete="off" aria-label="搜索内容" />
                 <button class="submit" type="submit" aria-label="提交搜索">
@@ -59,9 +59,6 @@
                 <span></span>
                 <ul id="word" style="display: none;" role="listbox" aria-label="搜索建议"></ul>
             </form>
-            <div class="set-check hidden-xs">
-                <input type="checkbox" id="set-search-blank" class="bubble-3" autocomplete="off" />
-            </div>
         </div>
 
         <!-- 代码注入位置1 - 搜索栏下方 -->
@@ -79,6 +76,9 @@
                     <span th:text="${group.spec.displayName}"></span>
                 </li>
                 <li class="col-3 col-sm-3 col-md-3 col-lg-1" th:each="link : ${group.links}" :key="i"
+                    th:with="accessState = ${link.status?.verification?.access?.state?.name()},
+                             showLinkStatus = ${theme.config.style.show_link_status == 'true'}"
+                    th:classappend="${showLinkStatus and accessState == 'INACCESSIBLE'} ? ' link-offline'"
                     th:if="${#annotations.getOrDefault(link, 'login_visible_link', 'false') != 'true' ||
                     (#annotations.getOrDefault(link, 'login_visible_link', 'false') == 'true' && user_login)}">
                     <a rel="nofollow" th:with="to_post_radio = ${#annotations.get(link, 'to_post_radio')},
@@ -93,6 +93,10 @@
                         </th:block>
                         <span th:text="${link.spec.displayName}"></span>
                     </a>
+                    <i class="link-status-dot online" th:if="${showLinkStatus and accessState == 'ACCESSIBLE'}"
+                        title="在线" aria-label="在线"></i>
+                    <i class="link-status-dot offline" th:if="${showLinkStatus and accessState == 'INACCESSIBLE'}"
+                        title="离线" aria-label="离线"></i>
                 </li>
             </ul>
         </th:block>
