@@ -33,6 +33,16 @@ spec:
               value: "true"
             - label: 固定位置
               value: "false"
+        - $formkit: radio
+          name: show_link_status
+          label: 显示链接状态
+          value: "true"
+          options:
+            - label: 显示
+              value: "true"
+            - label: 不显示
+              value: "false"
+          help: 控制是否在首页链接上显示在线/离线状态（依赖友链插件的链接检测功能）
 
     - group: html_inject
       label: 代码注入
